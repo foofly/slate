@@ -5,6 +5,20 @@
   font-family: "Inter", system-ui, sans-serif !important;
 }
 
+// Toolbar icons are a dark PNG sprite — invert to show on dark background
+.toastui-editor-toolbar-icons {
+  filter: invert(1) !important;
+  opacity: 0.8;
+
+  &:disabled {
+    opacity: 0.3 !important;
+  }
+
+  &:not(:disabled):hover {
+    opacity: 1 !important;
+  }
+}
+
 // Toolbar — the background lives on defaultUI-toolbar, not toolbar
 .toastui-editor-defaultUI-toolbar {
   background: var(--color-bg-elevated) !important;
