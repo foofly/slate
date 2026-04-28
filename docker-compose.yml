@@ -1,0 +1,19 @@
+services:
+  slate:
+    build: .
+    image: slate:latest
+    container_name: slate
+    restart: unless-stopped
+    ports:
+      - "5147:5147"
+    volumes:
+      - /path/to/your/obsidian/vault:/vault:rw
+    environment:
+      SLATE_VAULT_PATH: /vault
+      SLATE_HOST: 0.0.0.0
+      SLATE_PORT: 5147
+      SLATE_READONLY: "false"
+      # SLATE_AUTH: password
+      # SLATE_PASSWORD: changeme
+      PUID: 1000
+      PGID: 1000
