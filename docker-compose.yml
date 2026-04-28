@@ -2,6 +2,7 @@ services:
   slate:
     build: .
     image: slate:latest
+    pull_policy: build
     container_name: slate
     restart: unless-stopped
     ports:
