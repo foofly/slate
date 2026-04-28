@@ -7,7 +7,7 @@ services:
     ports:
       - "5147:5147"
     volumes:
-      - /home/pi/obsidian:/vault:rw
+      - ${SLATE_VAULT_PATH}:/vault:rw
     environment:
       SLATE_VAULT_PATH: /vault
       SLATE_HOST: 0.0.0.0
