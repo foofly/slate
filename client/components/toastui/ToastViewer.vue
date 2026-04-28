@@ -4,7 +4,7 @@
 
 <script setup>
 import { onMounted, onUnmounted, ref, watch } from "vue";
-import { Viewer } from "@toast-ui/editor";
+import Viewer from "@toast-ui/editor/viewer";
 import { basePlugins } from "./baseOptions.js";
 import { obsidianCustomHTMLRenderer } from "./obsidianPlugin.js";
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
