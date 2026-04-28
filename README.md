@@ -70,8 +70,6 @@ All configuration is via environment variables:
 | `SLATE_HOST` | `0.0.0.0` | Bind host |
 | `SLATE_PORT` | `5147` | Bind port |
 | `SLATE_READONLY` | `false` | Set to `true` to disable all write operations |
-| `SLATE_AUTH` | `none` | Authentication mode (`none` or `password`) |
-| `SLATE_PASSWORD` | *(unset)* | Password when `SLATE_AUTH=password` |
 | `PUID` | `1000` | User ID for vault file ownership (when running as root) |
 | `PGID` | `1000` | Group ID for vault file ownership |
 
