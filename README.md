@@ -34,6 +34,20 @@ docker compose up --build -d
 
 3. Open [http://localhost:5147](http://localhost:5147)
 
+### Portainer Stack
+
+1. In Portainer, go to **Stacks → Add stack**
+2. Choose **Repository** as the build method and fill in:
+   - **Repository URL:** `https://github.com/foofly/slate`
+   - **Repository reference:** `refs/heads/main`
+   - **Compose path:** `docker-compose.yml`
+3. Under **Authentication**, enable it and provide a GitHub personal access token with `repo` scope (required for private repos — Settings → Developer settings → Personal access tokens → Classic)
+4. Under **Environment variables**, set at minimum:
+   - `SLATE_VAULT_PATH` — path to your vault on the host (e.g. `/mnt/data/vault`)
+5. Click **Deploy the stack**
+
+To auto-redeploy when you push to GitHub, enable **GitOps updates** in the stack settings and set a polling interval.
+
 ### Docker CLI
 
 ```bash
