@@ -5,18 +5,61 @@
   font-family: "Inter", system-ui, sans-serif !important;
 }
 
-.toastui-editor-toolbar {
+// Toolbar — the background lives on defaultUI-toolbar, not toolbar
+.toastui-editor-defaultUI-toolbar {
   background: var(--color-bg-elevated) !important;
   border-bottom: 1px solid var(--color-border) !important;
 }
 
+.toastui-editor-toolbar-divider {
+  background: var(--color-border) !important;
+}
+
+.toastui-editor-defaultUI-toolbar button,
 .toastui-editor-toolbar-item-wrapper button {
   color: var(--color-text-muted) !important;
+  border-color: var(--color-bg-elevated) !important;
+  background: transparent !important;
 
-  &:hover {
+  &:not(:disabled):hover {
     background: var(--color-bg) !important;
+    border-color: var(--color-border) !important;
     color: var(--color-text) !important;
   }
+}
+
+// Markdown tab strip
+.toastui-editor-defaultUI .toastui-editor-md-tab-container {
+  background: var(--color-bg-elevated) !important;
+  border-bottom-color: var(--color-border) !important;
+}
+
+.toastui-editor-md-tab-container .tab-item {
+  background: var(--color-bg) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-muted) !important;
+
+  &.active {
+    background: var(--color-bg-elevated) !important;
+    border-bottom-color: var(--color-bg-elevated) !important;
+    color: var(--color-text) !important;
+  }
+}
+
+// WYSIWYG container
+.toastui-editor-ww-container {
+  background: var(--color-bg) !important;
+}
+
+.toastui-editor-main-container {
+  color: var(--color-text) !important;
+}
+
+// Close/cancel button in popups
+.toastui-editor-defaultUI .toastui-editor-close-button {
+  background: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-muted) !important;
 }
 
 .toastui-editor-main {
