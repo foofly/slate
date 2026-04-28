@@ -5,17 +5,23 @@
   font-family: "Inter", system-ui, sans-serif !important;
 }
 
-// Toolbar icons are a dark PNG sprite — invert to show on dark background
+// Toolbar icons are a dark PNG sprite — invert to show on dark background.
+// border and background must be none/transparent before filtering so only
+// the sprite pixels get inverted, not the button chrome.
 .toastui-editor-toolbar-icons {
-  filter: invert(1) !important;
-  opacity: 0.8;
-
-  &:disabled {
-    opacity: 0.3 !important;
-  }
+  filter: invert(0.85) !important;
+  border: none !important;
+  background-color: transparent !important;
+  opacity: 0.75;
 
   &:not(:disabled):hover {
-    opacity: 1 !important;
+    background-color: transparent !important;
+    border: none !important;
+    opacity: 1;
+  }
+
+  &:disabled {
+    opacity: 0.25 !important;
   }
 }
 
