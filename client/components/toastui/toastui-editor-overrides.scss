@@ -10,13 +10,12 @@
 // the sprite pixels get inverted, not the button chrome.
 .toastui-editor-toolbar-icons {
   filter: invert(0.85) !important;
-  border: none !important;
-  background-color: transparent !important;
+  border-color: transparent !important;
   opacity: 0.75;
 
   &:not(:disabled):hover {
     background-color: transparent !important;
-    border: none !important;
+    border-color: transparent !important;
     opacity: 1;
   }
 
@@ -38,11 +37,11 @@
 .toastui-editor-defaultUI-toolbar button,
 .toastui-editor-toolbar-item-wrapper button {
   color: var(--color-text-muted) !important;
-  border-color: var(--color-bg-elevated) !important;
-  background: transparent !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
 
   &:not(:disabled):hover {
-    background: var(--color-bg) !important;
+    background-color: var(--color-bg) !important;
     border-color: var(--color-border) !important;
     color: var(--color-text) !important;
   }
