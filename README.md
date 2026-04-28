@@ -42,7 +42,7 @@ docker compose up --build -d
    - **Repository reference:** `refs/heads/main`
    - **Compose path:** `docker-compose.yml`
 3. Under **Environment variables**, set at minimum:
-   - `SLATE_VAULT_PATH` — path to your vault on the host (e.g. `/home/pi/obsidian`)
+   - `SLATE_VAULT_PATH` — path to your vault on the host (e.g. `/home/user/obsidian`)
 4. Click **Deploy the stack**
 
 To auto-redeploy when you push to GitHub, enable **GitOps updates** in the stack settings and set a polling interval.
