@@ -33,9 +33,18 @@
   font-size: 14px !important;
   line-height: 1.7 !important;
 
+  // Override hardcoded #222 on direct child elements in viewer CSS
+  p, ul, ol, menu, dir, li {
+    color: var(--color-text) !important;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     color: var(--color-text) !important;
     border-bottom-color: var(--color-border) !important;
+  }
+
+  del {
+    color: var(--color-text-muted) !important;
   }
 
   a {
@@ -45,6 +54,10 @@
   blockquote {
     border-left-color: var(--color-border) !important;
     color: var(--color-text-muted) !important;
+
+    p, ul, ol {
+      color: var(--color-text-muted) !important;
+    }
   }
 
   code {
@@ -57,11 +70,22 @@
   }
 
   table {
+    color: var(--color-text) !important;
+    border-color: var(--color-border) !important;
+
     th {
       background: var(--color-bg-elevated) !important;
+      color: var(--color-text) !important;
+    }
+    td {
+      background: var(--color-bg) !important;
+      color: var(--color-text) !important;
     }
     td, th {
       border-color: var(--color-border) !important;
+    }
+    th p, td p {
+      color: var(--color-text) !important;
     }
   }
 
