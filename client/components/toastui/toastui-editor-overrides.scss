@@ -1,0 +1,146 @@
+// Remap Toast UI colors to our CSS vars
+.toastui-editor-defaultUI {
+  border: 1px solid var(--color-border) !important;
+  border-radius: 0 !important;
+  font-family: "Inter", system-ui, sans-serif !important;
+}
+
+.toastui-editor-toolbar {
+  background: var(--color-bg-elevated) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.toastui-editor-toolbar-item-wrapper button {
+  color: var(--color-text-muted) !important;
+
+  &:hover {
+    background: var(--color-bg) !important;
+    color: var(--color-text) !important;
+  }
+}
+
+.toastui-editor-main {
+  background: var(--color-bg) !important;
+}
+
+.toastui-editor {
+  background: var(--color-bg) !important;
+  color: var(--color-text) !important;
+}
+
+.toastui-editor-contents {
+  color: var(--color-text) !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text) !important;
+    border-bottom-color: var(--color-border) !important;
+  }
+
+  a {
+    color: var(--color-brand) !important;
+  }
+
+  blockquote {
+    border-left-color: var(--color-border) !important;
+    color: var(--color-text-muted) !important;
+  }
+
+  code {
+    background: var(--color-bg-elevated) !important;
+    color: var(--color-brand) !important;
+  }
+
+  pre {
+    background: var(--color-bg-elevated) !important;
+  }
+
+  table {
+    th {
+      background: var(--color-bg-elevated) !important;
+    }
+    td, th {
+      border-color: var(--color-border) !important;
+    }
+  }
+
+  hr {
+    border-color: var(--color-border) !important;
+  }
+}
+
+.toastui-editor-md-container {
+  background: var(--color-bg) !important;
+}
+
+.toastui-editor-md-container .toastui-editor {
+  color: var(--color-text) !important;
+}
+
+.toastui-editor-mode-switch {
+  background: var(--color-bg-elevated) !important;
+  border-top: 1px solid var(--color-border) !important;
+
+  .tab-item {
+    color: var(--color-text-muted) !important;
+    background: transparent !important;
+
+    &.active {
+      color: var(--color-text) !important;
+      background: var(--color-bg) !important;
+    }
+  }
+}
+
+// Wikilinks
+.wiki-link {
+  color: var(--color-brand) !important;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-brand-hover) !important;
+  }
+}
+
+// Callout blocks
+.callout {
+  border-left: 4px solid var(--color-border);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  margin: 12px 0;
+  background: var(--color-bg-elevated);
+
+  .callout-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .callout-body {
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+
+  &.callout-note    { border-left-color: #89b4fa; .callout-title { color: #89b4fa; } }
+  &.callout-tip     { border-left-color: #a6e3a1; .callout-title { color: #a6e3a1; } }
+  &.callout-success { border-left-color: #a6e3a1; .callout-title { color: #a6e3a1; } }
+  &.callout-warning { border-left-color: #f9e2af; .callout-title { color: #f9e2af; } }
+  &.callout-danger  { border-left-color: #f38ba8; .callout-title { color: #f38ba8; } }
+  &.callout-info    { border-left-color: #89dceb; .callout-title { color: #89dceb; } }
+  &.callout-question { border-left-color: #fab387; .callout-title { color: #fab387; } }
+  &.callout-abstract { border-left-color: #74c7ec; .callout-title { color: #74c7ec; } }
+  &.callout-bug     { border-left-color: #f38ba8; .callout-title { color: #f38ba8; } }
+  &.callout-example { border-left-color: #cba6f7; .callout-title { color: #cba6f7; } }
+  &.callout-quote   { border-left-color: #a6adc8; .callout-title { color: #a6adc8; } }
+}
+
+// Frontmatter display
+.toastui-editor-contents .front-matter {
+  background: var(--color-bg-elevated) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 6px !important;
+  color: var(--color-text-muted) !important;
+  font-size: 12px !important;
+}
