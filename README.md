@@ -32,14 +32,14 @@ volumes:
 docker compose up --build -d
 ```
 
-3. Open [http://localhost:8080](http://localhost:8080)
+3. Open [http://localhost:5147](http://localhost:5147)
 
 ### Docker CLI
 
 ```bash
 docker build -t slate .
 docker run -d \
-  -p 8080:8080 \
+  -p 5147:5147 \
   -v /path/to/your/obsidian/vault:/vault:rw \
   -e PUID=1000 -e PGID=1000 \
   --name slate \
@@ -54,7 +54,7 @@ All configuration is via environment variables:
 |---|---|---|
 | `SLATE_VAULT_PATH` | `/vault` | Path to the vault directory inside the container |
 | `SLATE_HOST` | `0.0.0.0` | Bind host |
-| `SLATE_PORT` | `8080` | Bind port |
+| `SLATE_PORT` | `5147` | Bind port |
 | `SLATE_READONLY` | `false` | Set to `true` to disable all write operations |
 | `SLATE_AUTH` | `none` | Authentication mode (`none` or `password`) |
 | `SLATE_PASSWORD` | *(unset)* | Password when `SLATE_AUTH=password` |
@@ -180,6 +180,10 @@ slate/
 - **Editor:** [Toast UI Editor v3](https://github.com/nhn/tui.editor) (MIT)
 
 ## Credits & Attributions
+
+### Author
+
+- **[foofly](https://github.com/foofly)** — creator and maintainer of Slate.
 
 ### Inspiration
 

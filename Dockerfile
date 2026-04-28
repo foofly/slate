@@ -11,7 +11,7 @@ RUN npm run build
 FROM python:3.11-slim-bullseye
 
 ENV SLATE_HOST=0.0.0.0
-ENV SLATE_PORT=8080
+ENV SLATE_PORT=5147
 ENV SLATE_VAULT_PATH=/vault
 ENV PUID=1000
 ENV PGID=1000
@@ -30,7 +30,7 @@ COPY entrypoint.sh healthcheck.sh /
 RUN chmod +x /entrypoint.sh /healthcheck.sh
 
 VOLUME /vault
-EXPOSE 8080
+EXPOSE 5147
 
 HEALTHCHECK --interval=60s --timeout=10s --start-period=10s CMD /healthcheck.sh
 
