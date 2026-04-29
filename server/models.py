@@ -31,6 +31,10 @@ class NoteMove(BaseModel):
     new_path: str
 
 
+class FolderMove(BaseModel):
+    new_path: str
+
+
 class SearchResult(BaseModel):
     path: str
     title: str

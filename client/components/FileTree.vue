@@ -44,7 +44,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useVaultStore } from "../store.js";
-import { moveNote } from "../api.js";
+import { moveNote, moveFolder } from "../api.js";
 import TreeNode from "./TreeNode.vue";
 import NewFolderModal from "./NewFolderModal.vue";
 
@@ -61,22 +61,37 @@ function onRootDragLeave(e) {
 
 async function onRootDrop(e) {
   rootDragOver.value = false;
-  const notePath = e.dataTransfer.getData("text/plain");
-  if (!notePath?.endsWith(".md")) return;
-  const parts = notePath.split("/");
-  if (parts.length <= 1) return; // already at root
-  const fileName = parts.at(-1);
-  if (store.isDirty && store.activeNotePath === notePath)
-    if (!confirm("Unsaved changes — move anyway?")) return;
-  try {
-    await moveNote(notePath, fileName);
-    if (store.activeNotePath === notePath) {
-      store.setActiveNote(fileName);
-      router.push(`/note/${fileName.replace(/\.md$/i, "")}`);
-    }
-    await store.fetchTree();
-  } catch (err) {
-    console.error("Move to root failed:", err);
+  const draggedPath = e.dataTransfer.getData("text/plain");
+  if (!draggedPath) return;
+
+  if (draggedPath.endsWith(".md")) {
+    const parts = draggedPath.split("/");
+    if (parts.length <= 1) return;
+    const fileName = parts.at(-1);
+    if (store.isDirty && store.activeNotePath === draggedPath)
+      if (!confirm("Unsaved changes — move anyway?")) return;
+    try {
+      await moveNote(draggedPath, fileName);
+      if (store.activeNotePath === draggedPath) {
+        store.setActiveNote(fileName);
+        router.push(`/note/${fileName.replace(/\.md$/i, "")}`);
+      }
+      await store.fetchTree();
+    } catch (err) { console.error("Move to root failed:", err); }
+
+  } else {
+    const parts = draggedPath.split("/");
+    if (parts.length <= 1) return;
+    const folderName = parts.at(-1);
+    try {
+      await moveFolder(draggedPath, folderName);
+      if (store.activeNotePath?.startsWith(draggedPath + "/")) {
+        const updated = folderName + store.activeNotePath.slice(draggedPath.length);
+        store.setActiveNote(updated);
+        router.push(`/note/${updated.replace(/\.md$/i, "")}`);
+      }
+      await store.fetchTree();
+    } catch (err) { console.error("Folder move to root failed:", err); }
   }
 }
 </script>

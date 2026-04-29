@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import config
 from .helpers import sanitize_folder_path, sanitize_note_path
-from .models import NoteCreate, NoteMove, NoteRead, NoteWrite, SearchResult, TreeItem
+from .models import FolderMove, NoteCreate, NoteMove, NoteRead, NoteWrite, SearchResult, TreeItem
 from .search import SearchIndex
 from .vault import Vault
 
@@ -128,6 +128,26 @@ async def create_folder(folder_path: str):
     except FileExistsError:
         raise HTTPException(409, "Folder already exists")
     return {"path": folder_path}
+
+
+@app.patch("/api/folders/{folder_path:path}")
+async def move_folder(folder_path: str, body: FolderMove):
+    if config.readonly:
+        raise HTTPException(403, "Vault is read-only")
+    src = sanitize_folder_path(config.vault_path, folder_path)
+    dst = sanitize_folder_path(config.vault_path, body.new_path)
+    if not src.exists() or not src.is_dir():
+        raise HTTPException(404, "Folder not found")
+    if dst.exists():
+        raise HTTPException(409, "Destination already exists")
+    try:
+        dst.relative_to(src)
+        raise HTTPException(400, "Cannot move a folder into itself or a descendant")
+    except ValueError:
+        pass
+    await vault.move_folder(src, dst)
+    search_index.sync()
+    return {"path": body.new_path}
 
 
 # --- Search ---

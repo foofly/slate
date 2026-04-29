@@ -57,6 +57,12 @@ class Vault:
             path.mkdir(parents=True, exist_ok=False)
         await asyncio.to_thread(_mkdir)
 
+    async def move_folder(self, src: Path, dst: Path) -> None:
+        def _move():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(src), str(dst))
+        await asyncio.to_thread(_move)
+
     async def delete_note(self, path: Path) -> None:
         await asyncio.to_thread(path.unlink)
 

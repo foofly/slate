@@ -8,6 +8,9 @@
       style="color: var(--color-text-muted)"
       :style="{ paddingLeft: `${(depth * 12) + 12}px` }"
       @click="isOpen = !isOpen"
+      draggable="true"
+      @dragstart="onDragStart"
+      @dragend="onDragEnd"
       @dragover.prevent="onFolderDragOver"
       @dragleave="onFolderDragLeave"
       @drop.prevent="onFolderDrop"
@@ -52,7 +55,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useVaultStore } from "../store.js";
-import { moveNote } from "../api.js";
+import { moveNote, moveFolder } from "../api.js";
 import { notePathToTitle } from "../helpers.js";
 
 const props = defineProps({
@@ -95,24 +98,43 @@ function onFolderDragLeave(e) {
 
 async function onFolderDrop(e) {
   dragOver.value = false;
-  const notePath = e.dataTransfer.getData("text/plain");
-  if (!notePath?.endsWith(".md")) return;
-  const fileName = notePath.split("/").pop();
-  const newPath = `${props.node.path}/${fileName}`;
-  const currentParent = notePath.includes("/") ? notePath.slice(0, notePath.lastIndexOf("/")) : "";
-  if (currentParent === props.node.path) return;
-  if (store.isDirty && store.activeNotePath === notePath)
-    if (!confirm("Unsaved changes — move anyway?")) return;
-  try {
-    await moveNote(notePath, newPath);
-    if (store.activeNotePath === notePath) {
-      store.setActiveNote(newPath);
-      router.push(`/note/${newPath.replace(/\.md$/i, "")}`);
-    }
-    isOpen.value = true;
-    await store.fetchTree();
-  } catch (err) {
-    console.error("Move failed:", err);
+  const draggedPath = e.dataTransfer.getData("text/plain");
+  if (!draggedPath) return;
+
+  if (draggedPath.endsWith(".md")) {
+    const fileName = draggedPath.split("/").pop();
+    const newPath = `${props.node.path}/${fileName}`;
+    const currentParent = draggedPath.includes("/") ? draggedPath.slice(0, draggedPath.lastIndexOf("/")) : "";
+    if (currentParent === props.node.path) return;
+    if (store.isDirty && store.activeNotePath === draggedPath)
+      if (!confirm("Unsaved changes — move anyway?")) return;
+    try {
+      await moveNote(draggedPath, newPath);
+      if (store.activeNotePath === draggedPath) {
+        store.setActiveNote(newPath);
+        router.push(`/note/${newPath.replace(/\.md$/i, "")}`);
+      }
+      isOpen.value = true;
+      await store.fetchTree();
+    } catch (err) { console.error("Move failed:", err); }
+
+  } else {
+    if (draggedPath === props.node.path) return;
+    if (props.node.path.startsWith(draggedPath + "/")) return;
+    const currentParent = draggedPath.includes("/") ? draggedPath.slice(0, draggedPath.lastIndexOf("/")) : "";
+    if (currentParent === props.node.path) return;
+    const folderName = draggedPath.split("/").pop();
+    const newPath = `${props.node.path}/${folderName}`;
+    try {
+      await moveFolder(draggedPath, newPath);
+      if (store.activeNotePath?.startsWith(draggedPath + "/")) {
+        const updated = newPath + store.activeNotePath.slice(draggedPath.length);
+        store.setActiveNote(updated);
+        router.push(`/note/${updated.replace(/\.md$/i, "")}`);
+      }
+      isOpen.value = true;
+      await store.fetchTree();
+    } catch (err) { console.error("Folder move failed:", err); }
   }
 }
 </script>

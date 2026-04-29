@@ -32,6 +32,11 @@ export async function moveNote(path, newPath) {
   return data;
 }
 
+export async function moveFolder(path, newPath) {
+  const { data } = await http.patch(`/api/folders/${encodeNotePath(path)}`, { new_path: newPath });
+  return data;
+}
+
 export async function createFolder(path) {
   const { data } = await http.post(`/api/folders/${encodeNotePath(path)}`);
   return data;
