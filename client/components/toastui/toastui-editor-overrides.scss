@@ -200,7 +200,12 @@
   .cm-comment { color: var(--color-text-muted) !important; }
   .cm-code    { background: var(--color-bg-elevated) !important; color: var(--color-brand) !important; }
 
-  // Fenced code block — Toast UI renders it as an overlay block inside the CM pane
+  // Fenced code block — per-line background divs are the actual white bars
+  .toastui-editor-md-code-block-line-background,
+  .toastui-editor-md-custom-block-line-background {
+    background-color: var(--color-bg-elevated) !important;
+  }
+
   .toastui-editor-md-code-block-contents {
     background: var(--color-bg-elevated) !important;
     color: var(--color-text) !important;
@@ -215,6 +220,17 @@
     .token.operator,
     .token.punctuation { color: var(--color-text) !important; }
   }
+
+  // Toast UI's own decoration spans — these use toastui-editor-md-* classes,
+  // not cm-* tokens, so the blanket cm-* reset above doesn't catch them.
+  .toastui-editor-md-table-cell                       { color: var(--color-text) !important; }
+  .toastui-editor-md-list-item-odd,
+  .toastui-editor-md-list-item-even                   { color: var(--color-text) !important; }
+  .toastui-editor-md-delimiter,
+  .toastui-editor-md-marked-text,
+  .toastui-editor-md-meta                             { color: var(--color-text-muted) !important; }
+  .toastui-editor-md-block-quote                      { color: var(--color-text-muted) !important; }
+  .toastui-editor-md-custom-block                     { color: var(--color-text) !important; }
 }
 
 .toastui-editor-md-container .toastui-editor {
