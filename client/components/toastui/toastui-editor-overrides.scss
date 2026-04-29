@@ -70,6 +70,13 @@
   background: var(--color-bg) !important;
 }
 
+// ProseMirror is the WYSIWYG contenteditable area; it has a hardcoded
+// color:#222 that is a direct rule and beats inherited values from the parent.
+.ProseMirror {
+  color: var(--color-text) !important;
+  background: var(--color-bg) !important;
+}
+
 .toastui-editor-main-container {
   color: var(--color-text) !important;
 }
