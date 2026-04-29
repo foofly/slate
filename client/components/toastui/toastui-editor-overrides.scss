@@ -188,10 +188,13 @@
     background: var(--color-bg-elevated) !important;
   }
 
-  // Markdown syntax token colours
-  .cm-header { color: var(--color-brand) !important; font-weight: 600; }
-  .cm-strong  { color: var(--color-text) !important; }
-  .cm-em      { color: var(--color-text) !important; }
+  // Reset every CM token span to the theme text colour. Without this, tokens
+  // like cm-formatting, cm-variable-2, cm-string etc. keep their hardcoded
+  // default colours from codemirror.css and become illegible on dark backgrounds.
+  [class*="cm-"] { color: var(--color-text) !important; }
+
+  // Re-apply intentional per-token colours on top of the blanket reset.
+  .cm-header  { color: var(--color-brand) !important; font-weight: 600; }
   .cm-link,
   .cm-url     { color: var(--color-brand) !important; }
   .cm-comment { color: var(--color-text-muted) !important; }
