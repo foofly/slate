@@ -50,6 +50,13 @@ class Vault:
             tmp.replace(path)
         await asyncio.to_thread(_write)
 
+    async def create_folder(self, path: Path) -> None:
+        def _mkdir():
+            if path.exists():
+                raise FileExistsError
+            path.mkdir(parents=True, exist_ok=False)
+        await asyncio.to_thread(_mkdir)
+
     async def delete_note(self, path: Path) -> None:
         await asyncio.to_thread(path.unlink)
 

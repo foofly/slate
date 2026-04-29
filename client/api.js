@@ -32,6 +32,11 @@ export async function moveNote(path, newPath) {
   return data;
 }
 
+export async function createFolder(path) {
+  const { data } = await http.post(`/api/folders/${encodeNotePath(path)}`);
+  return data;
+}
+
 export async function search(q, limit = 20) {
   const { data } = await http.get("/api/search", { params: { q, limit } });
   return data;

@@ -4,9 +4,13 @@
     <div
       v-if="node.type === 'folder'"
       class="flex items-center gap-1.5 px-3 py-1 cursor-pointer select-none text-sm transition-colors"
+      :class="{ 'drag-over-folder': dragOver }"
       style="color: var(--color-text-muted)"
       :style="{ paddingLeft: `${(depth * 12) + 12}px` }"
       @click="isOpen = !isOpen"
+      @dragover.prevent="onFolderDragOver"
+      @dragleave="onFolderDragLeave"
+      @drop.prevent="onFolderDrop"
     >
       <svg
         width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -31,7 +35,10 @@
         background: isActive ? 'var(--color-brand)' + '22' : '',
         color: isActive ? 'var(--color-brand)' : 'var(--color-text)',
       }"
+      draggable="true"
       @click="openNote"
+      @dragstart="onDragStart"
+      @dragend="onDragEnd"
     >
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
@@ -45,6 +52,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useVaultStore } from "../store.js";
+import { moveNote } from "../api.js";
 import { notePathToTitle } from "../helpers.js";
 
 const props = defineProps({
@@ -53,6 +61,7 @@ const props = defineProps({
 });
 
 const isOpen = ref(false);
+const dragOver = ref(false);
 const store = useVaultStore();
 const router = useRouter();
 
@@ -64,4 +73,56 @@ function openNote() {
   store.setActiveNote(props.node.path);
   router.push(`/note/${notePath}`);
 }
+
+function onDragStart(e) {
+  e.dataTransfer.effectAllowed = "move";
+  e.dataTransfer.setData("text/plain", props.node.path);
+  e.currentTarget.style.opacity = "0.4";
+}
+
+function onDragEnd(e) {
+  e.currentTarget.style.opacity = "";
+}
+
+function onFolderDragOver(e) {
+  e.dataTransfer.dropEffect = "move";
+  dragOver.value = true;
+}
+
+function onFolderDragLeave(e) {
+  if (!e.currentTarget.contains(e.relatedTarget)) dragOver.value = false;
+}
+
+async function onFolderDrop(e) {
+  dragOver.value = false;
+  const notePath = e.dataTransfer.getData("text/plain");
+  if (!notePath?.endsWith(".md")) return;
+  const fileName = notePath.split("/").pop();
+  const newPath = `${props.node.path}/${fileName}`;
+  const currentParent = notePath.includes("/") ? notePath.slice(0, notePath.lastIndexOf("/")) : "";
+  if (currentParent === props.node.path) return;
+  if (store.isDirty && store.activeNotePath === notePath)
+    if (!confirm("Unsaved changes — move anyway?")) return;
+  try {
+    await moveNote(notePath, newPath);
+    if (store.activeNotePath === notePath) {
+      store.setActiveNote(newPath);
+      router.push(`/note/${newPath.replace(/\.md$/i, "")}`);
+    }
+    isOpen.value = true;
+    await store.fetchTree();
+  } catch (err) {
+    console.error("Move failed:", err);
+  }
+}
 </script>
+
+<style scoped>
+[draggable="true"] { cursor: grab; }
+.drag-over-folder {
+  background: color-mix(in srgb, var(--color-brand) 15%, transparent);
+  border-radius: 4px;
+  outline: 1px dashed var(--color-brand);
+  outline-offset: -1px;
+}
+</style>

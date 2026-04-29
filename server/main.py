@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import config
-from .helpers import sanitize_note_path
+from .helpers import sanitize_folder_path, sanitize_note_path
 from .models import NoteCreate, NoteMove, NoteRead, NoteWrite, SearchResult, TreeItem
 from .search import SearchIndex
 from .vault import Vault
@@ -114,6 +114,20 @@ async def move_note(note_path: str, body: NoteMove):
         content=content,
         last_modified=dst.stat().st_mtime,
     )
+
+
+# --- Folders ---
+
+@app.post("/api/folders/{folder_path:path}", status_code=201)
+async def create_folder(folder_path: str):
+    if config.readonly:
+        raise HTTPException(403, "Vault is read-only")
+    safe = sanitize_folder_path(config.vault_path, folder_path)
+    try:
+        await vault.create_folder(safe)
+    except FileExistsError:
+        raise HTTPException(409, "Folder already exists")
+    return {"path": folder_path}
 
 
 # --- Search ---
