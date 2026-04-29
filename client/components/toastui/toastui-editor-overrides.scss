@@ -158,6 +158,60 @@
 
 .toastui-editor-md-container {
   background: var(--color-bg) !important;
+
+  // CodeMirror host element
+  .CodeMirror {
+    background: var(--color-bg) !important;
+    color: var(--color-text) !important;
+  }
+
+  .CodeMirror-scroll {
+    background: var(--color-bg) !important;
+  }
+
+  // Each rendered line must explicitly inherit so CM's default #000 doesn't win
+  .CodeMirror pre.CodeMirror-line,
+  .CodeMirror pre.CodeMirror-line-like {
+    color: var(--color-text) !important;
+  }
+
+  .CodeMirror-cursor {
+    border-left-color: var(--color-text) !important;
+  }
+
+  .CodeMirror-selected,
+  .CodeMirror-focused .CodeMirror-selected {
+    background: rgba(203, 166, 247, 0.15) !important;
+  }
+
+  .CodeMirror-activeline-background {
+    background: var(--color-bg-elevated) !important;
+  }
+
+  // Markdown syntax token colours
+  .cm-header { color: var(--color-brand) !important; font-weight: 600; }
+  .cm-strong  { color: var(--color-text) !important; }
+  .cm-em      { color: var(--color-text) !important; }
+  .cm-link,
+  .cm-url     { color: var(--color-brand) !important; }
+  .cm-comment { color: var(--color-text-muted) !important; }
+  .cm-code    { background: var(--color-bg-elevated) !important; color: var(--color-brand) !important; }
+
+  // Fenced code block — Toast UI renders it as an overlay block inside the CM pane
+  .toastui-editor-md-code-block-contents {
+    background: var(--color-bg-elevated) !important;
+    color: var(--color-text) !important;
+
+    // Prism tokens inside the block
+    .token.keyword,
+    .token.builtin   { color: #cba6f7 !important; }
+    .token.function  { color: #89b4fa !important; }
+    .token.string    { color: #a6e3a1 !important; }
+    .token.number    { color: #fab387 !important; }
+    .token.comment   { color: var(--color-text-muted) !important; }
+    .token.operator,
+    .token.punctuation { color: var(--color-text) !important; }
+  }
 }
 
 .toastui-editor-md-container .toastui-editor {
