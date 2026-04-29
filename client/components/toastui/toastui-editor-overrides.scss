@@ -200,6 +200,25 @@
   .cm-comment { color: var(--color-text-muted) !important; }
   .cm-code    { background: var(--color-bg-elevated) !important; color: var(--color-brand) !important; }
 
+  // Reset every toastui-editor-md-* decoration span. Toast UI applies its own
+  // spans on top of CodeMirror with hardcoded light-theme colors (#222, etc.).
+  // This blanket reset catches heading, strong, emph, link, code, and any
+  // other decoration class not listed explicitly below.
+  [class*="toastui-editor-md-"] { color: var(--color-text) !important; }
+
+  // Re-apply intentional per-decoration colours.
+  .toastui-editor-md-heading,
+  .toastui-editor-md-heading1,
+  .toastui-editor-md-heading2,
+  .toastui-editor-md-heading3,
+  .toastui-editor-md-heading4,
+  .toastui-editor-md-heading5,
+  .toastui-editor-md-heading6   { color: var(--color-brand) !important; font-weight: 600; }
+  .toastui-editor-md-link,
+  .toastui-editor-md-link-desc,
+  .toastui-editor-md-link-url   { color: var(--color-brand) !important; }
+  .toastui-editor-md-code       { background: var(--color-bg-elevated) !important; color: var(--color-brand) !important; }
+
   // Fenced code block — per-line background divs are the actual white bars
   .toastui-editor-md-code-block-line-background,
   .toastui-editor-md-custom-block-line-background {
