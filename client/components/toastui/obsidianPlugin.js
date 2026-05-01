@@ -59,23 +59,31 @@ export const obsidianCustomHTMLRenderer = {
     return origin?.();
   },
 
-  // Wikilinks: in Toast UI WYSIWYG, [[Note]] becomes a link with href=""
-  // In the markdown source we post-process text nodes for [[...]] patterns
+  // Wikilinks and image embeds: post-process text nodes for [[...]] and ![[...]] patterns
   text(node, { origin }) {
     const literal = node.literal ?? "";
     if (!literal.includes("[[")) return origin?.();
 
     const parts = [];
     let last = 0;
-    const re = /\[\[([^\]]+)\]\]/g;
+    const re = /(!?)\[\[([^\]]+)\]\]/g;
     let m;
     while ((m = re.exec(literal)) !== null) {
       if (m.index > last) {
         parts.push({ type: "html", content: escapeHtml(literal.slice(last, m.index)) });
       }
-      const target = m[1];
-      const href = `/note/${encodeURIComponent(target)}`;
-      parts.push({ type: "html", content: `<a href="${href}" class="wiki-link">${escapeHtml(target)}</a>` });
+      const isEmbed = m[1] === "!";
+      const target = m[2];
+      if (isEmbed) {
+        const encodedPath = target.split("/").map(encodeURIComponent).join("/");
+        parts.push({
+          type: "html",
+          content: `<img src="/api/attachments/${encodedPath}" alt="${escapeHtml(target)}" class="embedded-image">`,
+        });
+      } else {
+        const href = `/note/${encodeURIComponent(target)}`;
+        parts.push({ type: "html", content: `<a href="${href}" class="wiki-link">${escapeHtml(target)}</a>` });
+      }
       last = m.index + m[0].length;
     }
     if (last < literal.length) {

@@ -176,7 +176,7 @@ slate/
 | Code blocks with syntax highlighting | ✅ |
 | Standard markdown (headings, tables, lists…) | ✅ |
 | Backlinks / graph view | ❌ |
-| Embedded images/attachments | ❌ |
+| Embedded images (`![[image.png]]`) | ✅ |
 
 ## Security
 

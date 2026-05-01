@@ -1,11 +1,12 @@
+import mimetypes
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import config
-from .helpers import sanitize_folder_path, sanitize_note_path
+from .helpers import sanitize_attachment_path, sanitize_folder_path, sanitize_note_path
 from .models import FolderMove, NoteCreate, NoteMove, NoteRead, NoteWrite, SearchResult, TreeItem
 from .search import SearchIndex
 from .vault import Vault
@@ -157,6 +158,17 @@ def search(q: str = "", limit: int = 20):
     if not q.strip():
         return []
     return search_index.search(q.strip(), limit=limit)
+
+
+# --- Attachments (images) ---
+
+@app.get("/api/attachments/{file_path:path}")
+async def get_attachment(file_path: str):
+    safe = sanitize_attachment_path(config.vault_path, file_path)
+    if not safe.exists() or not safe.is_file():
+        raise HTTPException(404, "Attachment not found")
+    media_type, _ = mimetypes.guess_type(str(safe))
+    return FileResponse(str(safe), media_type=media_type or "application/octet-stream")
 
 
 # --- SPA static files (must be last) ---

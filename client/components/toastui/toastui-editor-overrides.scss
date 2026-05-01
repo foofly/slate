@@ -278,6 +278,15 @@
   }
 }
 
+// Embedded images
+.embedded-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 4px 0;
+  display: block;
+}
+
 // Wikilinks
 .wiki-link {
   color: var(--color-brand) !important;
