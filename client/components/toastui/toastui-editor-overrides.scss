@@ -328,6 +328,10 @@
   &.callout-bug     { border-left-color: #f38ba8; .callout-title { color: #f38ba8; } }
   &.callout-example { border-left-color: #cba6f7; .callout-title { color: #cba6f7; } }
   &.callout-quote   { border-left-color: #a6adc8; .callout-title { color: #a6adc8; } }
+  &.callout-okey    { border-left-color: #94e2d5; .callout-title { color: #94e2d5; } }
+  &.callout-error   { border-left-color: #f38ba8; .callout-title { color: #f38ba8; } }
+  &.callout-todo    { border-left-color: #89b4fa; .callout-title { color: #89b4fa; } }
+  &.callout-failure { border-left-color: #f38ba8; .callout-title { color: #f38ba8; } }
 }
 
 // Frontmatter display
