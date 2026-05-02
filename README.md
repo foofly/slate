@@ -1,4 +1,6 @@
-# Slate
+<p align="center">
+  <img src="docs/slate_logo.svg" alt="Slate" height="80">
+</p>
 
 A self-hosted Docker web interface for [Obsidian](https://obsidian.md) vaults. Browse and edit your markdown notes in a browser with a full WYSIWYG editor, hierarchical folder navigation, and Obsidian-flavored markdown rendering.
 
