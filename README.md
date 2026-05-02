@@ -22,20 +22,48 @@ A self-hosted Docker web interface for [Obsidian](https://obsidian.md) vaults. B
 
 ### Docker Compose (recommended)
 
-1. Clone the repo and edit `docker-compose.yml` to point to your vault:
+1. Clone the repo:
 
-```yaml
-volumes:
-  - /path/to/your/obsidian/vault:/vault:rw
+```bash
+git clone https://github.com/foofly/slate.git
+cd slate
 ```
 
-2. Start the container:
+2. Create a `.env` file in the project root and set the path to your vault:
+
+```bash
+SLATE_VAULT_PATH=/path/to/your/obsidian/vault
+```
+
+You can also override any other defaults here:
+
+```bash
+SLATE_VAULT_PATH=/path/to/your/obsidian/vault
+SLATE_PORT=5147
+PUID=1000
+PGID=1000
+# SLATE_READONLY=true   # uncomment to disable all writes
+```
+
+3. Build and start the container:
 
 ```bash
 docker compose up --build -d
 ```
 
-3. Open [http://localhost:5147](http://localhost:5147)
+4. Open [http://localhost:5147](http://localhost:5147)
+
+To stop the container:
+
+```bash
+docker compose down
+```
+
+To view logs:
+
+```bash
+docker compose logs -f slate
+```
 
 ### Portainer Stack
 
