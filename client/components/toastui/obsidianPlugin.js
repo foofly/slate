@@ -31,7 +31,14 @@ function blockQuoteFirstText(node) {
   return "";
 }
 
-export const obsidianCustomHTMLRenderer = {
+export function createObsidianRenderer(noteDir = "") {
+  return buildRenderer(noteDir);
+}
+
+// Default export for contexts without a note path
+export const obsidianCustomHTMLRenderer = buildRenderer("");
+
+function buildRenderer(noteDir) { return {
   blockQuote(node, { entering, origin }) {
     const calloutType = getCalloutType(blockQuoteFirstText(node));
     if (!entering) {
@@ -106,7 +113,8 @@ export const obsidianCustomHTMLRenderer = {
       const isEmbed = m[1] === "!";
       const target = m[2];
       if (isEmbed) {
-        const encodedPath = target.split("/").map(encodeURIComponent).join("/");
+        const resolved = (!target.includes("/") && noteDir) ? `${noteDir}/${target}` : target;
+        const encodedPath = resolved.split("/").map(encodeURIComponent).join("/");
         parts.push({
           type: "html",
           content: `<img src="/api/attachments/${encodedPath}" alt="${escapeHtml(target)}" class="embedded-image">`,
@@ -122,7 +130,7 @@ export const obsidianCustomHTMLRenderer = {
     }
     return parts;
   },
-};
+}; }
 
 function escapeHtml(str) {
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");

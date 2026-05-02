@@ -6,13 +6,14 @@
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import { Editor } from "@toast-ui/editor";
 import { baseOptions } from "./baseOptions.js";
-import { obsidianCustomHTMLRenderer } from "./obsidianPlugin.js";
+import { createObsidianRenderer } from "./obsidianPlugin.js";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "./toastui-editor-overrides.scss";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
   initialEditType: { type: String, default: "wysiwyg" },
+  noteDir: { type: String, default: "" },
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);
@@ -26,7 +27,7 @@ onMounted(() => {
     initialValue: props.modelValue,
     initialEditType: props.initialEditType,
     height: "100%",
-    customHTMLRenderer: obsidianCustomHTMLRenderer,
+    customHTMLRenderer: createObsidianRenderer(props.noteDir),
     events: {
       change: () => {
         const md = editor.getMarkdown();

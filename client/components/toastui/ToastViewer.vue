@@ -6,12 +6,13 @@
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import Viewer from "@toast-ui/editor/viewer";
 import { basePlugins } from "./baseOptions.js";
-import { obsidianCustomHTMLRenderer } from "./obsidianPlugin.js";
+import { createObsidianRenderer } from "./obsidianPlugin.js";
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 import "./toastui-editor-overrides.scss";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
+  noteDir: { type: String, default: "" },
 });
 
 const viewerEl = ref(null);
@@ -22,7 +23,7 @@ onMounted(() => {
     el: viewerEl.value,
     initialValue: props.modelValue,
     plugins: basePlugins,
-    customHTMLRenderer: obsidianCustomHTMLRenderer,
+    customHTMLRenderer: createObsidianRenderer(props.noteDir),
   });
 });
 

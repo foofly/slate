@@ -38,12 +38,14 @@
         v-if="isEditMode"
         ref="editorRef"
         v-model="content"
+        :note-dir="noteDir"
         class="flex-1"
         @change="onContentChange"
       />
       <ToastViewer
         v-else
         :model-value="content"
+        :note-dir="noteDir"
         class="flex-1"
       />
     </template>
@@ -89,6 +91,10 @@ const notePath = computed(() => {
 });
 
 const noteTitle = computed(() => notePathToTitle(notePath.value));
+const noteDir = computed(() => {
+  const idx = notePath.value.lastIndexOf("/");
+  return idx >= 0 ? notePath.value.slice(0, idx) : "";
+});
 const isDirty = computed(() => content.value !== savedContent.value);
 
 async function loadNote() {
