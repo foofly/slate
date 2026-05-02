@@ -1,14 +1,25 @@
-const CALLOUT_TYPES = ["note", "tip", "warning", "danger", "info", "success", "question", "abstract", "bug", "example", "quote"];
+const CALLOUT_TYPES = ["note", "tip", "warning", "danger", "info", "success", "question", "abstract", "bug", "example", "quote", "okey", "error", "todo", "failure"];
+const CALLOUT_ALIASES = {
+  summary: "abstract", tldr: "abstract",
+  hint: "tip", important: "tip",
+  check: "success", done: "success",
+  help: "question", faq: "question",
+  caution: "warning", attention: "warning",
+  cite: "quote",
+  fail: "failure", missing: "failure",
+};
 const CALLOUT_ICONS = {
   note: "📝", tip: "💡", warning: "⚠️", danger: "🔥", info: "ℹ️",
   success: "✅", question: "❓", abstract: "📋", bug: "🐛", example: "📖", quote: "💬",
+  okey: "✔️", error: "❌", todo: "☑️", failure: "✖️",
 };
 
 function getCalloutType(text) {
   const m = text.match(/^\[!(\w+)\]/i);
   if (!m) return null;
   const t = m[1].toLowerCase();
-  return CALLOUT_TYPES.includes(t) ? t : null;
+  if (CALLOUT_TYPES.includes(t)) return t;
+  return CALLOUT_ALIASES[t] ?? null;
 }
 
 function blockQuoteFirstText(node) {
