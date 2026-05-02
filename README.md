@@ -4,8 +4,8 @@
 
 A self-hosted Docker web interface for [Obsidian](https://obsidian.md) vaults. Browse and edit your markdown notes in a browser with a full WYSIWYG editor, hierarchical folder navigation, and Obsidian-flavored markdown rendering.
 
-![Slate — dark theme](docs/screenshot-dark.png)
-![Slate — light theme](docs/screenshot-light.png)
+![Slate — dark theme](docs/Screenshot_darkSlate.png)
+![Slate — light theme](docs/Screenshot_lightSlate.png)
 
 ## Features
 
