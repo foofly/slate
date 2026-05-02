@@ -1,3 +1,7 @@
+import katex from "katex";
+import "katex/dist/katex.min.css";
+import "katex/contrib/mhchem";
+
 const CALLOUT_TYPES = ["note", "tip", "warning", "danger", "info", "success", "question", "abstract", "bug", "example", "quote", "okey", "error", "todo", "failure"];
 const CALLOUT_ALIASES = {
   summary: "abstract", tldr: "abstract",
@@ -62,6 +66,14 @@ function buildRenderer(noteDir) { return {
     return origin?.() ?? { type: "openTag", tagName: "blockquote", selfClose: false };
   },
 
+  codeBlock(node, { origin }) {
+    if (node.info?.trim() === "math") {
+      const html = katex.renderToString(node.literal ?? "", { displayMode: true, throwOnError: false });
+      return { type: "html", content: `<div class="math-display">${html}</div>` };
+    }
+    return origin?.();
+  },
+
   paragraph(node, { entering, origin }) {
     const parent = node.parent;
     if (parent?.type === "blockQuote" && parent.firstChild === node) {
@@ -100,28 +112,37 @@ function buildRenderer(noteDir) { return {
     ) {
       return { type: "html", content: "" };
     }
-    if (!literal.includes("[[")) return origin?.();
+    if (!literal.includes("[[") && !literal.includes("$")) return origin?.();
 
     const parts = [];
     let last = 0;
-    const re = /(!?)\[\[([^\]]+)\]\]/g;
+    const re = /(?<bang>!?)\[\[(?<wikilink>[^\]]+)\]\]|\$\$(?<dispmath>[^$]*?)\$\$|\$(?<inlinemath>[^$\n]+?)\$/g;
     let m;
     while ((m = re.exec(literal)) !== null) {
       if (m.index > last) {
         parts.push({ type: "html", content: escapeHtml(literal.slice(last, m.index)) });
       }
-      const isEmbed = m[1] === "!";
-      const target = m[2];
-      if (isEmbed) {
-        const resolved = (!target.includes("/") && noteDir) ? `${noteDir}/${target}` : target;
-        const encodedPath = resolved.split("/").map(encodeURIComponent).join("/");
-        parts.push({
-          type: "html",
-          content: `<img src="/api/attachments/${encodedPath}" alt="${escapeHtml(target)}" class="embedded-image">`,
-        });
+      const { bang, wikilink, dispmath, inlinemath } = m.groups;
+      if (wikilink !== undefined) {
+        const isEmbed = bang === "!";
+        const target = wikilink;
+        if (isEmbed) {
+          const resolved = (!target.includes("/") && noteDir) ? `${noteDir}/${target}` : target;
+          const encodedPath = resolved.split("/").map(encodeURIComponent).join("/");
+          parts.push({
+            type: "html",
+            content: `<img src="/api/attachments/${encodedPath}" alt="${escapeHtml(target)}" class="embedded-image">`,
+          });
+        } else {
+          const href = `/note/${encodeURIComponent(target)}`;
+          parts.push({ type: "html", content: `<a href="${href}" class="wiki-link">${escapeHtml(target)}</a>` });
+        }
+      } else if (dispmath !== undefined) {
+        const html = katex.renderToString(dispmath, { displayMode: true, throwOnError: false });
+        parts.push({ type: "html", content: html });
       } else {
-        const href = `/note/${encodeURIComponent(target)}`;
-        parts.push({ type: "html", content: `<a href="${href}" class="wiki-link">${escapeHtml(target)}</a>` });
+        const html = katex.renderToString(inlinemath, { displayMode: false, throwOnError: false });
+        parts.push({ type: "html", content: html });
       }
       last = m.index + m[0].length;
     }

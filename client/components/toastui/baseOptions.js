@@ -1,8 +1,5 @@
 import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import Prism from "prismjs";
-import katexPlugin from "@toast-ui/editor-plugin-katex";
-import "@toast-ui/editor-plugin-katex/dist/toastui-editor-plugin-katex.css";
-import "katex/contrib/mhchem";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-typescript";
@@ -12,7 +9,7 @@ import "prismjs/components/prism-yaml";
 import "prismjs/components/prism-markdown";
 import "prismjs/components/prism-sql";
 
-export const basePlugins = [[codeSyntaxHighlight, { highlighter: Prism }], katexPlugin];
+export const basePlugins = [[codeSyntaxHighlight, { highlighter: Prism }]];
 
 export const baseOptions = {
   usageStatistics: false,
