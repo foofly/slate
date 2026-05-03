@@ -63,6 +63,9 @@ class Vault:
             shutil.move(str(src), str(dst))
         await asyncio.to_thread(_move)
 
+    async def delete_folder(self, path: Path) -> None:
+        await asyncio.to_thread(shutil.rmtree, path)
+
     async def delete_note(self, path: Path) -> None:
         await asyncio.to_thread(path.unlink)
 

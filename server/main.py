@@ -131,6 +131,17 @@ async def create_folder(folder_path: str):
     return {"path": folder_path}
 
 
+@app.delete("/api/folders/{folder_path:path}", status_code=204)
+async def delete_folder(folder_path: str):
+    if config.readonly:
+        raise HTTPException(403, "Vault is read-only")
+    safe = sanitize_folder_path(config.vault_path, folder_path)
+    if not safe.exists() or not safe.is_dir():
+        raise HTTPException(404, "Folder not found")
+    await vault.delete_folder(safe)
+    search_index.sync()
+
+
 @app.patch("/api/folders/{folder_path:path}")
 async def move_folder(folder_path: str, body: FolderMove):
     if config.readonly:

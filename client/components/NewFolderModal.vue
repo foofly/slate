@@ -37,9 +37,10 @@ import { ref, onMounted } from "vue";
 import { createFolder } from "../api.js";
 import { useVaultStore } from "../store.js";
 
+const props = defineProps({ parentPath: { type: String, default: "" } });
 const emit = defineEmits(["close"]);
 const store = useVaultStore();
-const folderPath = ref("");
+const folderPath = ref(props.parentPath ? `${props.parentPath}/` : "");
 const creating = ref(false);
 const error = ref("");
 const inputRef = ref(null);

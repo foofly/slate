@@ -37,6 +37,17 @@ export async function moveFolder(path, newPath) {
   return data;
 }
 
+export async function renameFolder(path, newName) {
+  const parent = path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : "";
+  const newPath = parent ? `${parent}/${newName}` : newName;
+  const { data } = await http.patch(`/api/folders/${encodeNotePath(path)}`, { new_path: newPath });
+  return data;
+}
+
+export async function deleteFolder(path) {
+  await http.delete(`/api/folders/${encodeNotePath(path)}`);
+}
+
 export async function createFolder(path) {
   const { data } = await http.post(`/api/folders/${encodeNotePath(path)}`);
   return data;
