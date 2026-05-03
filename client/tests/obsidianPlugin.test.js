@@ -77,6 +77,33 @@ describe("LaTeX rendering (issue #5)", () => {
   });
 });
 
+// --- Issue #2: Mermaid ---
+
+describe("Mermaid rendering (issue #2)", () => {
+  it("renders a ```mermaid code fence as a .mermaid div", () => {
+    const node = { info: "mermaid", literal: "graph TD\n  A --> B" };
+    const result = renderer.codeBlock(node, { origin: () => null });
+
+    expect(result.type).toBe("html");
+    expect(result.content).toContain('class="mermaid"');
+  });
+
+  it("preserves the diagram source as text content (HTML-escaped)", () => {
+    const node = { info: "mermaid", literal: "graph TD\n  A --> B" };
+    const result = renderer.codeBlock(node, { origin: () => null });
+
+    // The literal should appear in the output (A --> B uses -->, not HTML special chars)
+    expect(result.content).toContain("A --&gt; B");
+  });
+
+  it("does not pass mermaid blocks through to origin", () => {
+    let originCalled = false;
+    const node = { info: "mermaid", literal: "sequenceDiagram\n  A->>B: Hello" };
+    renderer.codeBlock(node, { origin: () => { originCalled = true; } });
+    expect(originCalled).toBe(false);
+  });
+});
+
 // --- Issue #6: mhchem ---
 
 describe("mhchem rendering (issue #6)", () => {

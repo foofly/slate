@@ -71,6 +71,10 @@ function buildRenderer(noteDir) { return {
       const html = katex.renderToString(node.literal ?? "", { displayMode: true, throwOnError: false });
       return { type: "html", content: `<div class="math-display">${html}</div>` };
     }
+    if (node.info?.trim() === "mermaid") {
+      // escapeHtml ensures the code is safe as innerHTML; mermaid reads textContent (decoded)
+      return { type: "html", content: `<div class="mermaid">${escapeHtml(node.literal ?? "")}</div>` };
+    }
     return origin?.();
   },
 
