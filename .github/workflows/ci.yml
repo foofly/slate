@@ -27,7 +27,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/vault"
           docker run -d --name slate-test -p 5147:5147 -v "$RUNNER_TEMP/vault:/vault" slate:test
           trap 'docker logs slate-test; docker rm -f slate-test' EXIT
-          curl --retry 20 --retry-connrefused --retry-delay 2 --fail http://localhost:5147/health
+          curl --retry 20 --retry-all-errors --retry-delay 2 --connect-timeout 2 --max-time 5 --fail --silent --show-error http://localhost:5147/health
           curl --fail http://localhost:5147/
           curl --fail -X POST -H 'Content-Type: application/json' -d '{"content":"maintenance smoke test"}' http://localhost:5147/api/notes/smoke.md
           curl --fail http://localhost:5147/api/notes/smoke.md
