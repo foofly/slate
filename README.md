@@ -18,78 +18,135 @@ A self-hosted Docker web interface for [Obsidian](https://obsidian.md) vaults. B
 - **Read-only mode** — Mount your vault read-only for safe browsing
 - **Docker-native** — Multi-stage build, PUID/PGID support, health check endpoint
 
-## Quick Start
+## Installation
+
+Slate is available on [Docker Hub](https://hub.docker.com/r/foofly/slate).
+The image supports Linux AMD64 and ARM64, including Apple Silicon Docker hosts
+and 64-bit Raspberry Pi systems. Install Docker Engine with Docker Compose v2,
+or Docker Desktop, before starting. No source checkout or local build is needed.
 
 ### Docker Compose (recommended)
 
-1. Clone the repo:
+1. Create a directory for the deployment:
 
 ```bash
-git clone https://github.com/foofly/slate.git
+mkdir slate
 cd slate
 ```
 
-2. Create a `.env` file in the project root and set the path to your vault:
+2. Save the following as `compose.yaml`. Replace `/path/to/your/obsidian/vault`
+with the absolute path to your existing vault on the Docker host. Set `PUID`
+and `PGID` to the vault owner's numeric IDs (`id -u` and `id -g` on Linux).
 
-```bash
-SLATE_VAULT_PATH=/path/to/your/obsidian/vault
+```yaml
+services:
+  slate:
+    image: foofly/slate:latest
+    container_name: slate
+    restart: unless-stopped
+    ports:
+      - "5147:5147"
+    volumes:
+      - /path/to/your/obsidian/vault:/vault:rw
+    environment:
+      SLATE_VAULT_PATH: /vault
+      SLATE_HOST: 0.0.0.0
+      SLATE_PORT: 5147
+      SLATE_READONLY: "false"
+      PUID: 1000
+      PGID: 1000
 ```
 
-You can also override any other defaults here:
-
-```bash
-SLATE_VAULT_PATH=/path/to/your/obsidian/vault
-SLATE_PORT=5147
-PUID=1000
-PGID=1000
-# SLATE_READONLY=true   # uncomment to disable all writes
-```
-
-3. Pull and start the prebuilt container:
+3. Pull and start Slate:
 
 ```bash
 docker compose pull
 docker compose up -d
 ```
 
-4. Open [http://localhost:5147](http://localhost:5147)
+4. Open [http://localhost:5147](http://localhost:5147), or
+`http://YOUR_SERVER_IP:5147` for a remote Docker host.
 
-To stop the container:
-
-```bash
-docker compose down
-```
-
-To view logs:
-
-```bash
-docker compose logs -f slate
-```
+To use another host port, change the left side of the mapping, for example
+`"8080:5147"`, and open port 8080. The internal port stays 5147.
+The vault remains on the host when the container is replaced or removed.
 
 ### Portainer Stack
 
-1. In Portainer, go to **Stacks → Add stack**
-2. Choose **Repository** as the stack source and fill in:
-   - **Repository URL:** `https://github.com/foofly/slate`
-   - **Repository reference:** `refs/heads/main`
-   - **Compose path:** `docker-compose.yml`
-3. Under **Environment variables**, set at minimum:
-   - `SLATE_VAULT_PATH` — path to your vault on the host (e.g. `/home/user/obsidian`)
-4. Click **Deploy the stack**
+1. Go to **Stacks → Add stack** and name the stack `slate`.
+2. Select **Web editor** and paste the Compose example above.
+3. Replace the vault path with its absolute path on the Docker host and set
+   `PUID` and `PGID` for the vault owner.
+4. Click **Deploy the stack**, then open `http://YOUR_SERVER_IP:5147`.
 
-Use Portainer’s pull-image option when redeploying to retrieve the newest published image.
+To update, use Portainer's pull-image option when redeploying the stack.
 
 ### Docker CLI
+
+Replace the vault path and IDs before running:
 
 ```bash
 docker pull foofly/slate:latest
 docker run -d \
+  --name slate \
+  --restart unless-stopped \
   -p 5147:5147 \
   -v /path/to/your/obsidian/vault:/vault:rw \
   -e PUID=1000 -e PGID=1000 \
-  --name slate \
   foofly/slate:latest
 ```
+
+### Updating and managing Slate
+
+For Compose installations:
+
+```bash
+# Download and use the latest image
+docker compose pull
+docker compose up -d
+
+# Show status and logs
+docker compose ps
+docker compose logs -f slate
+
+# Stop and remove the container (the host vault is retained)
+docker compose down
+```
+
+For Docker CLI installations, pull the image, run `docker stop slate` and
+`docker rm slate`, then repeat the `docker run` command above with the same
+vault path and settings.
+
+`latest` follows tested updates to `main`. To pin an installation, replace
+`foofly/slate:latest` with a published `sha-<full-commit>` tag or an image digest
+from Docker Hub. Version tags are available when a corresponding release has
+been published. Back up your vault before updating.
+
+### Using the repository's Compose file
+
+If you prefer to keep the deployment files in a source checkout:
+
+```bash
+git clone https://github.com/foofly/slate.git
+cd slate
+printf 'SLATE_VAULT_PATH=/absolute/path/to/your/vault\n' > .env
+docker compose pull
+docker compose up -d
+```
+
+Edit `docker-compose.yml` to change the host port, PUID, PGID, or read-only
+setting. The supplied file only substitutes the host vault path from `.env`.
+
+### Building from source
+
+From a source checkout, build a local image:
+
+```bash
+docker build -t slate:local .
+```
+
+Use `slate:local` instead of `foofly/slate:latest` in the Docker CLI example.
+The default Compose file uses the published Docker Hub image.
 
 ## Configuration
 
@@ -115,14 +172,14 @@ environment:
 
 ## Development
 
-**Requirements:** Node.js 20+, Python 3.11+
+**Requirements:** Node.js 24, Python 3.11
 
 ```bash
 # Install frontend dependencies
-npm install
+npm ci
 
 # Install backend dependencies
-pip install -r server/requirements.txt
+pip install --require-hashes -r server/requirements.txt
 
 # Terminal 1 — backend (hot reload)
 SLATE_VAULT_PATH=/path/to/your/vault uvicorn server.main:app --reload --port 8000
