@@ -264,3 +264,29 @@ slate/
 ## License
 
 MIT
+
+## Dependency maintenance
+
+Use Node 24 and Python 3.11. Install frontend dependencies with `npm ci`,
+then run `npm test` and `npm run build`.
+
+Python input manifests are in `server/requirements*.in`; committed `.txt`
+files contain resolved versions and hashes. Install tests with
+`pip install --require-hashes -r server/requirements-test.txt`, then run
+`python -m pytest`.
+
+To refresh Python locks, install `pip-tools==7.6.2` under Python 3.11 and run:
+
+```sh
+pip-compile --upgrade --generate-hashes --output-file server/requirements.txt server/requirements.in
+pip-compile --upgrade --generate-hashes --output-file server/requirements-test.txt server/requirements-test.in
+```
+
+CI checks tests, the production build, dependency advisories, and container startup.
+Dependabot checks dependency updates weekly. Review major UI migrations separately.
+
+### Remaining maintenance risks
+
+Toast UI Editor is archived upstream and Whoosh remains on its legacy release;
+replacements are deferred. Tailwind 4 requires modern browsers (Safari 16.4+,
+Chrome 111+, Firefox 128+).

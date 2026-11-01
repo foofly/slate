@@ -7,7 +7,7 @@
         <input
           ref="inputRef"
           v-model="notePath"
-          class="w-full rounded px-3 py-2 text-sm outline-none mb-4"
+          class="w-full rounded-sm px-3 py-2 text-sm outline-hidden mb-4"
           style="background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text)"
           placeholder="My Note"
           @keydown.enter="create"
@@ -16,12 +16,12 @@
         <p v-if="error" class="text-xs mb-3" style="color: #f38ba8">{{ error }}</p>
         <div class="flex justify-end gap-2">
           <button
-            class="px-3 py-1.5 rounded text-sm"
+            class="px-3 py-1.5 rounded-sm text-sm"
             style="background: var(--color-bg); color: var(--color-text-muted)"
             @click="$emit('close')"
           >Cancel</button>
           <button
-            class="px-3 py-1.5 rounded text-sm"
+            class="px-3 py-1.5 rounded-sm text-sm"
             style="background: var(--color-brand); color: #1e1e2e"
             :disabled="creating"
             @click="create"

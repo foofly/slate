@@ -5,18 +5,18 @@
       <h1 class="flex-1 text-sm font-semibold truncate" style="color: var(--color-text)">{{ noteTitle }}</h1>
       <span v-if="isDirty" class="text-xs" style="color: var(--color-text-muted)">Unsaved</span>
       <button
-        class="px-2.5 py-1 rounded text-xs transition-colors"
+        class="px-2.5 py-1 rounded-sm text-xs transition-colors"
         style="background: var(--color-bg); color: var(--color-text-muted)"
         @click="toggleEdit"
       >{{ isEditMode ? "Preview" : "Edit" }}</button>
       <button
-        class="px-2.5 py-1 rounded text-xs transition-colors"
+        class="px-2.5 py-1 rounded-sm text-xs transition-colors"
         :style="{ background: isDirty ? 'var(--color-brand)' : 'var(--color-bg)', color: isDirty ? '#1e1e2e' : 'var(--color-text-muted)' }"
         :disabled="!isDirty || saving"
         @click="save"
       >{{ saving ? "Saving…" : "Save" }}</button>
       <button
-        class="px-2.5 py-1 rounded text-xs transition-colors"
+        class="px-2.5 py-1 rounded-sm text-xs transition-colors"
         style="background: var(--color-bg); color: var(--color-text-muted)"
         @click="showDeleteConfirm = true"
       >Delete</button>

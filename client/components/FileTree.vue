@@ -4,7 +4,7 @@
       <span class="text-xs font-semibold uppercase tracking-wider" style="color: var(--color-text-muted)">Vault</span>
       <div class="flex items-center gap-1">
         <button
-          class="p-1 rounded transition-colors"
+          class="p-1 rounded-sm transition-colors"
           style="color: var(--color-text-muted)"
           title="New Folder"
           @click="newFolderOpen = true"
@@ -16,7 +16,7 @@
           </svg>
         </button>
         <button
-          class="p-1 rounded transition-colors"
+          class="p-1 rounded-sm transition-colors"
           style="color: var(--color-text-muted)"
           title="Refresh"
           @click="store.fetchTree()"

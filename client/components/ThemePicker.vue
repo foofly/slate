@@ -1,7 +1,7 @@
 <template>
   <div ref="pickerRef" class="relative">
     <button
-      class="flex items-center justify-center w-8 h-8 rounded transition-colors"
+      class="flex items-center justify-center w-8 h-8 rounded-sm transition-colors"
       :style="`background: var(--color-bg-elevated); color: var(--color-text-muted)`"
       :title="`Theme: ${activeTheme?.name}`"
       @click.stop="isOpen = !isOpen"

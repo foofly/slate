@@ -5,12 +5,12 @@
         <p class="text-sm mb-5" style="color: var(--color-text)">{{ message }}</p>
         <div class="flex justify-end gap-2">
           <button
-            class="px-3 py-1.5 rounded text-sm transition-colors"
+            class="px-3 py-1.5 rounded-sm text-sm transition-colors"
             style="background: var(--color-bg); color: var(--color-text-muted)"
             @click="$emit('cancel')"
           >Cancel</button>
           <button
-            class="px-3 py-1.5 rounded text-sm transition-colors"
+            class="px-3 py-1.5 rounded-sm text-sm transition-colors"
             style="background: #f38ba8; color: #1e1e2e"
             @click="$emit('confirm')"
           >{{ confirmLabel }}</button>

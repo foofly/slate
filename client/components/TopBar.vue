@@ -6,17 +6,17 @@
     <div class="flex-1" />
     <ThemePicker />
     <button
-      class="flex items-center gap-1 px-3 py-1.5 rounded text-xs transition-colors"
+      class="flex items-center gap-1 px-3 py-1.5 rounded-sm text-xs transition-colors"
       style="background: var(--color-bg-elevated); color: var(--color-text-muted)"
       @click="$emit('search')"
       title="Search (press /)"
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       Search
-      <kbd class="ml-1 px-1 rounded text-xs" style="background: var(--color-border)">/</kbd>
+      <kbd class="ml-1 px-1 rounded-sm text-xs" style="background: var(--color-border)">/</kbd>
     </button>
     <button
-      class="flex items-center gap-1 px-3 py-1.5 rounded text-xs transition-colors"
+      class="flex items-center gap-1 px-3 py-1.5 rounded-sm text-xs transition-colors"
       style="background: var(--color-brand); color: #1e1e2e"
       @click="$emit('new-note')"
       title="New Note (Ctrl+Alt+N)"

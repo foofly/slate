@@ -7,7 +7,7 @@
           <input
             ref="inputRef"
             v-model="query"
-            class="flex-1 bg-transparent outline-none text-sm"
+            class="flex-1 bg-transparent outline-hidden text-sm"
             style="color: var(--color-text)"
             placeholder="Search notes…"
             @keydown.escape="$emit('close')"

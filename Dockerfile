@@ -1,5 +1,5 @@
 # Stage 1: build Vue SPA
-FROM --platform=$BUILDPLATFORM node:20-alpine AS build
+FROM --platform=$BUILDPLATFORM node:24-alpine AS build
 WORKDIR /build
 COPY package.json package-lock.json* ./
 RUN npm ci
@@ -8,7 +8,7 @@ COPY client ./client
 RUN npm run build
 
 # Stage 2: Python runtime
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim-trixie
 
 ENV SLATE_HOST=0.0.0.0
 ENV SLATE_PORT=5147
@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends gosu curl && rm
 WORKDIR /app
 
 COPY server/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --require-hashes -r requirements.txt
 
 COPY server ./server
 COPY --from=build /build/client/dist ./client/dist

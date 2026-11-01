@@ -6,10 +6,10 @@
       <p class="text-sm">Select a note from the sidebar or create a new one.</p>
     </div>
     <div class="flex gap-2 text-xs mt-2">
-      <kbd class="px-2 py-1 rounded" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border)">/</kbd>
+      <kbd class="px-2 py-1 rounded-sm" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border)">/</kbd>
       <span>search</span>
       <span class="mx-2">·</span>
-      <kbd class="px-2 py-1 rounded" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border)">Ctrl+Alt+N</kbd>
+      <kbd class="px-2 py-1 rounded-sm" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border)">Ctrl+Alt+N</kbd>
       <span>new note</span>
     </div>
   </div>

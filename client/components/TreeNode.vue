@@ -32,7 +32,7 @@
     <!-- File -->
     <div
       v-if="node.type === 'file'"
-      class="flex items-center gap-1.5 px-3 py-1 cursor-pointer select-none text-sm transition-colors rounded mx-1"
+      class="flex items-center gap-1.5 px-3 py-1 cursor-pointer select-none text-sm transition-colors rounded-sm mx-1"
       :class="isActive ? 'font-medium' : 'hover:bg-opacity-10'"
       :style="{
         paddingLeft: `${(depth * 12) + 12}px`,
