@@ -1,5 +1,5 @@
 # Stage 1: build Vue SPA
-FROM --platform=$BUILDPLATFORM node:24-alpine AS build
+FROM --platform=$BUILDPLATFORM node:26-alpine AS build
 WORKDIR /build
 COPY package.json package-lock.json* ./
 RUN npm ci
