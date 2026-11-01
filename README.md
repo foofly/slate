@@ -297,7 +297,6 @@ slate/
 - **[Pinia](https://pinia.vuejs.org)** by Eduardo San Martin Morote — Vue state management. Licensed under MIT.
 - **[Vue Router](https://router.vuejs.org)** by Evan You — client-side routing. Licensed under MIT.
 - **[Tailwind CSS](https://tailwindcss.com)** by Tailwind Labs, Inc. — utility-first CSS framework. Licensed under MIT.
-- **[PrimeVue](https://primevue.org)** by PrimeTek — UI component library. Licensed under MIT.
 - **[Axios](https://axios-http.com)** by Matt Zabriskie & Collaborators — HTTP client. Licensed under MIT.
 - **[Mousetrap](https://craig.is/killing/mice)** by Craig Campbell — keyboard shortcut library. Licensed under Apache 2.0.
 - **[Prism.js](https://prismjs.com)** by Lea Verou — syntax highlighting for code blocks. Licensed under MIT. Copyright © 2012 Lea Verou.
