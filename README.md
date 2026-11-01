@@ -45,10 +45,11 @@ PGID=1000
 # SLATE_READONLY=true   # uncomment to disable all writes
 ```
 
-3. Build and start the container:
+3. Pull and start the prebuilt container:
 
 ```bash
-docker compose up --build -d
+docker compose pull
+docker compose up -d
 ```
 
 4. Open [http://localhost:5147](http://localhost:5147)
@@ -68,7 +69,7 @@ docker compose logs -f slate
 ### Portainer Stack
 
 1. In Portainer, go to **Stacks → Add stack**
-2. Choose **Repository** as the build method and fill in:
+2. Choose **Repository** as the stack source and fill in:
    - **Repository URL:** `https://github.com/foofly/slate`
    - **Repository reference:** `refs/heads/main`
    - **Compose path:** `docker-compose.yml`
@@ -76,18 +77,18 @@ docker compose logs -f slate
    - `SLATE_VAULT_PATH` — path to your vault on the host (e.g. `/home/user/obsidian`)
 4. Click **Deploy the stack**
 
-To auto-redeploy when you push to GitHub, enable **GitOps updates** in the stack settings and set a polling interval.
+Use Portainer’s pull-image option when redeploying to retrieve the newest published image.
 
 ### Docker CLI
 
 ```bash
-docker build -t slate .
+docker pull foofly/slate:latest
 docker run -d \
   -p 5147:5147 \
   -v /path/to/your/obsidian/vault:/vault:rw \
   -e PUID=1000 -e PGID=1000 \
   --name slate \
-  slate
+  foofly/slate:latest
 ```
 
 ## Configuration
@@ -290,3 +291,20 @@ Dependabot checks dependency updates weekly. Review major UI migrations separate
 Toast UI Editor is archived upstream and Whoosh remains on its legacy release;
 replacements are deferred. Tailwind 4 requires modern browsers (Safari 16.4+,
 Chrome 111+, Firefox 128+).
+
+## Docker Hub publishing
+
+Images: https://hub.docker.com/r/foofly/slate (AMD64 and ARM64).
+`latest` follows main after CI passes; stable `vX.Y.Z` Git tags publish `X.Y.Z`.
+Every publication also receives `sha-<full-commit>`. Pin a version or digest
+instead of `latest` when reproducible deployment is required.
+
+Maintainers must create a public Docker Hub repository named `foofly/slate`,
+set GitHub repository variable `DOCKERHUB_USERNAME` to `foofly`, and add a
+read/write Docker Hub access token as the repository secret `DOCKERHUB_TOKEN`.
+Use the Checks workflow's manual Run workflow button on main for the first
+publication after configuring credentials. Never commit tokens.
+
+To update an installation, run `docker compose pull && docker compose up -d`.
+To build locally instead, run `docker build -t slate:local .` and use
+`slate:local` in the Docker CLI example above.

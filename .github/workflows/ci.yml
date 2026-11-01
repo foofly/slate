@@ -1,5 +1,5 @@
 name: Checks
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 jobs:
@@ -31,3 +31,70 @@ jobs:
           curl --fail http://localhost:5147/
           curl --fail -X POST -H 'Content-Type: application/json' -d '{"content":"maintenance smoke test"}' http://localhost:5147/api/notes/smoke.md
           curl --fail http://localhost:5147/api/notes/smoke.md
+
+  publish:
+    needs: checks
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    concurrency:
+      group: dockerhub-publish
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate publishing inputs
+        env:
+          HUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        shell: bash
+        run: |
+          test -n "$HUB_TOKEN" || { echo 'Configure the DOCKERHUB_TOKEN repository secret'; exit 1; }
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Expected stable vX.Y.Z tag'; exit 1; }
+            git merge-base --is-ancestor HEAD origin/main
+          fi
+      - uses: docker/setup-qemu-action@v4
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Image tags
+        id: tags
+        shell: bash
+        run: |
+          echo 'tags<<TAGS' >> "$GITHUB_OUTPUT"
+          echo "foofly/slate:sha-$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_REF" == refs/heads/main ]]; then
+            echo 'foofly/slate:latest' >> "$GITHUB_OUTPUT"
+          else
+            echo "foofly/slate:${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+          echo TAGS >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v7
+        id: build
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/foofly/slate
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Verify published image
+        env:
+          IMAGE: foofly/slate@${{ steps.build.outputs.digest }}
+        run: |
+          docker buildx imagetools inspect "$IMAGE" --raw > /tmp/manifest.json
+          python -c 'import json; m=json.load(open("/tmp/manifest.json")); assert {"amd64", "arm64"} <= {x["platform"]["architecture"] for x in m["manifests"]}'
+          docker pull "$IMAGE"
+          mkdir -p "$RUNNER_TEMP/published-vault"
+          docker run -d --name published-slate -p 5147:5147 -v "$RUNNER_TEMP/published-vault:/vault" "$IMAGE"
+          trap 'docker logs published-slate; docker rm -f published-slate' EXIT
+          curl --retry 20 --retry-all-errors --retry-delay 2 --connect-timeout 2 --max-time 5 --fail http://localhost:5147/health
+          curl --fail http://localhost:5147/
+          curl --fail -X POST -H 'Content-Type: application/json' -d '{"content":"published smoke test"}' http://localhost:5147/api/notes/smoke.md
+          curl --fail http://localhost:5147/api/notes/smoke.md
+          echo "Published $IMAGE" >> "$GITHUB_STEP_SUMMARY"
