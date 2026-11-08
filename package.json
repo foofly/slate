@@ -24,7 +24,7 @@
     "dompurify": "^3.4.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.3",
+    "@tailwindcss/postcss": "^4.3.4",
     "@vitejs/plugin-vue": "^6.0.10",
     "postcss": "^8.4.0",
     "sass-embedded": "^1.70.0",
