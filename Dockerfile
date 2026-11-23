@@ -8,7 +8,7 @@ COPY client ./client
 RUN npm run build
 
 # Stage 2: Python runtime
-FROM python:3.11-slim-trixie
+FROM python:3.15-slim-trixie
 
 ENV SLATE_HOST=0.0.0.0
 ENV SLATE_PORT=5147
